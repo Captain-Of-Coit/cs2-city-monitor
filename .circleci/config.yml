@@ -1,0 +1,17 @@
+version: 2.1
+orbs:
+  node: circleci/node@5
+jobs:
+  test-node:
+    executor: node/default
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          name: Package
+          command: make package-unix
+workflows:
+  build-and-test:
+    jobs:
+      - test-node
