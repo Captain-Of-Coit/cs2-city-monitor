@@ -2,7 +2,7 @@ all: build
 .SHELLFLAGS = -e
 
 install-ui-deps:
-	npm ci
+	@npm ci
 
 bundle: install-ui-deps
 	@node build.mjs
