@@ -10,8 +10,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Setup NodeJS
+    - name: Build project
       uses: actions/setup-node@v3
       with:
         node-version: '21.1.0'
     - run: make package-unix && ls && ls dist/
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: release-file.zip
+        path: dist/release-*.zip
