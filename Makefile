@@ -1,5 +1,4 @@
 all: build
-.SHELLFLAGS = -e
 
 install-ui-deps:
 	@npm ci
