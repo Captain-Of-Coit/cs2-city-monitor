@@ -10,8 +10,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Use Node.js
+    - name: Setup NodeJS
       uses: actions/setup-node@v3
       with:
         node-version: '21.1.0'
+    - run: npm ci
     - run: make package-unix && ls && ls dist/
