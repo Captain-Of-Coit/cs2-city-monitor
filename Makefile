@@ -14,4 +14,6 @@ package-pwsh: build
 
 package-unix: build
     @version=$$(jq -r '.version' package.json); \
+    echo "Version: $$version"; \
+    echo "Zipping file to ./dist/release-$$version.zip"; \
     zip ./dist/release-$$version.zip ./dist/city_monitor.transpiled.js
