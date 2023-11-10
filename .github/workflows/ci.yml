@@ -16,7 +16,7 @@ jobs:
         node-version: '21.1.0'
     - run: make package-unix && ls && ls dist/
     - name: Upload Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: release-file.zip
         path: dist/release-*.zip
