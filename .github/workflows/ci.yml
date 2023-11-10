@@ -13,6 +13,9 @@ jobs:
 
     - name: Setup Node.js environment
       uses: actions/setup-node@v4.0.0
-      
+
+    - name: version
+      run: jq -r '.version' package.json
+    
     - name: Package
       run: make package-unix && ls && ls dist/
