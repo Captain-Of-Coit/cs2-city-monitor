@@ -15,7 +15,7 @@ jobs:
       uses: actions/setup-node@v4.0.0
 
     - name: Install dependencies
-      run: apt-get update && apt install --yes zip jq
+      run: sudo apt-get update && sudo apt install --yes zip jq
 
     - name: Package
       run: make package-unix
