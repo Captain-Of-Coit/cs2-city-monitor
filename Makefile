@@ -1,6 +1,5 @@
 all: build
 .SHELLFLAGS = -e
-SHELL=/bin/bash
 
 install-ui-deps:
 	npm
