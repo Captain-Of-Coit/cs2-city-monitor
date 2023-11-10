@@ -2,7 +2,7 @@
 
 Displays a little window so you can see the most important details of your city without having to open up any panels manually.
 
-<video src="demo.mp4"></video>
+https://github.com/Captain-Of-Coit/cs2-city-monitor/assets/126259864/c75e0b7f-ac10-4086-af54-44e9b19e5fdf
 
 Should display the following stats:
 
