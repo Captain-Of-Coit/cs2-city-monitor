@@ -13,9 +13,6 @@ jobs:
 
     - name: Setup Node.js environment
       uses: actions/setup-node@v4.0.0
-
-    - name: Install dependencies
-      run: sudo apt-get update && sudo apt install --yes zip jq
-
+      
     - name: Package
-      run: make package-unix && ls dist/
+      run: make package-unix && ls && ls dist/
