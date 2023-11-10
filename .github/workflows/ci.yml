@@ -14,9 +14,9 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '21.1.0'
-    - run: make package-unix && ls && ls dist/
+    - run: make build
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
         name: release-${{ github.sha }}
-        path: dist/release-*.zip
+        path: dist/*.transpiled.js
