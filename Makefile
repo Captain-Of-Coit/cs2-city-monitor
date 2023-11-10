@@ -3,7 +3,8 @@ all: build
 SHELL=/bin/bash
 
 install-ui-deps:
-	@npm ci
+	npm
+	npm ci
 
 bundle: install-ui-deps
 	@node build.mjs
