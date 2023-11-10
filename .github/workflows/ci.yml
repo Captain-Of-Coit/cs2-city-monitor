@@ -1,0 +1,24 @@
+name: Release
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v4.0.0
+
+    - name: Install dependencies
+      run: apt-get update && apt install --yes zip jq
+
+    - name: Package
+      run: make package-unix
+
+    - name: Run distcheck
+      run: ls dist/
