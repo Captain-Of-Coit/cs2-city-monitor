@@ -26,12 +26,14 @@ Should display the following stats:
 
 ## Requirements
 
-- Cities: Skylines 2
-- BepInEx-Unity.Mono-win-x64-6.0.0-be.674+82077ec
+- [Cities: Skylines 2](https://store.steampowered.com/app/949230/Cities_Skylines_II/)
+- [BepInEx-Unity.Mono-win-x64-6.0.0-be.674+82077ec](https://builds.bepinex.dev/projects/bepinex_be)
 - [HookUI 0.0.1](https://github.com/Captain-Of-Coit/hookui)
 
 ## Installation
 
-- Download latest release.
+- Make sure BepInEx 6.0.0 is installed
+- Make sure HookUI is installed
+- Download latest release from GitHub - [https://github.com/Captain-Of-Coit/cs2-city-monitor/releases](https://github.com/Captain-Of-Coit/cs2-city-monitor/releases)
 - Extract the ZIP archive
-- Place in "Cities2_Data\StreamingAssets\~UI~\HookUI\Extensions" directory, within your game directory
+- Place `city_monitor.transpiled.js` in `Cities2_Data\StreamingAssets\~UI~\HookUI\Extensions` directory, within your game directory
