@@ -1,12 +1,5 @@
 import React from 'react';
 
-function mapToPercentage(value) {
-    if (value < -1 || value > 1) {
-      throw new Error('Input must be between -1 and 1.');
-    }
-    return (value + 1) * 50;
-  }
-
 const $Meter = ({label, value, gradient}) => {
     const gradientStyle = {
         "backgroundImage": gradient
@@ -37,7 +30,6 @@ const $Meter = ({label, value, gradient}) => {
 const panelStyle = {
     position: 'absolute',
     width: 300,
-    height: 400,
 }
 
 const $Panel = ({ title, children, react }) => {
@@ -81,7 +73,7 @@ const $Panel = ({ title, children, react }) => {
 
     const draggableStyle = {
         ...panelStyle,
-        top: position.top + 'px',  // Ensure the values are not NaN
+        top: position.top + 'px',
         right: position.right + 'px',
     }
 
@@ -122,16 +114,13 @@ const engineEffect = (react, event, setFunc) => {
 
     return react.useEffect(() => {
         var clear = engine.on(updateEvent, (data) => {
-            if (data.current) {
-                // If the range is -1 <> 1 we turn it into a percentage
-                if (data.min === -1) {
-                    setFunc(mapToPercentage(data.current))
-                } else { // otherwise its probably already a percentage?
-                    setFunc(data.current)
-                }
+            console.log(updateEvent, data)
+            if (data.current !== undefined && data.min !== undefined && data.max !== undefined) {
+                const percentage = ((data.current - data.min) / (data.max - data.min)) * 100;
+                setFunc(percentage);
             } else {
-                // console.warn(`${updateEvent} didn't have .current`, a)
-                setFunc(data)
+                // console.warn(`${updateEvent} didn't have the expected properties`, data);
+                setFunc(data);
             }
         })
         engine.trigger(subscribeEvent)
@@ -142,29 +131,42 @@ const engineEffect = (react, event, setFunc) => {
     }, [])
 }
 
+// Used when max value (right) indicates that everything is OK ("Electricity Availability" for example)
+const maxGood = 'linear-gradient(to right,rgba(255, 78, 24, 1.000000) 0.000000%, rgba(255, 78, 24, 1.000000) 40.000000%, rgba(255, 131, 27, 1.000000) 40.000000%, rgba(255, 131, 27, 1.000000) 50.000000%, rgba(99, 181, 6, 1.000000) 50.000000%, rgba(99, 181, 6, 1.000000) 60.000000%, rgba(71, 148, 54, 1.000000) 60.000000%, rgba(71, 148, 54, 1.000000) 100.000000%)'
+// Used when min value (left) indicates everything is fine ("Fire Hazard" for example)
+const minGood = 'linear-gradient(to right,rgba(71, 148, 54, 1.000000) 0.000000%, rgba(99, 181, 6, 1.000000) 66.000000%, rgba(255, 131, 27, 1.000000) 33.000000%, rgba(255, 78, 24, 1.000000) 100.000000%)'
+
+const eventsToListenTo = [
+    ['Electricity', 'electricityInfo.electricityAvailability', maxGood],
+    ['Water Availability', 'waterInfo.waterAvailability', maxGood],
+    ['Sewage', 'waterInfo.sewageAvailability', maxGood],
+    ['Landfill Usage', 'garbageInfo.landfillAvailability', maxGood],
+    // TODO Incineration
+    ['Healthcare Availability', 'healthcareInfo.healthcareAvailability', maxGood],
+    ['Average Health', 'healthcareInfo.averageHealth', maxGood],
+    ['Cemetery Availability', 'healthcareInfo.cemeteryAvailability', maxGood],
+    // TODO Crematorium
+    ['Fire Hazard', 'fireAndRescueInfo.averageFireHazard', minGood],
+    ['Crime Rate', 'policeInfo.averageCrimeProbability', minGood],
+    ['Jail Availability', 'policeInfo.jailAvailability', maxGood],
+    ['Elementary School Availability', 'educationInfo.elementaryAvailability', maxGood],
+    ['High School Availability', 'educationInfo.highSchoolAvailability', maxGood],
+    ['College Availability', 'educationInfo.collegeAvailability', maxGood],
+    ['University Availability', 'educationInfo.universityAvailability', maxGood],
+    // TODO Employment Rate
+]
+
 const $CityMonitor = ({react}) => {
-    const [electricityDemand, setElectricityDemand] = react.useState(-1)
-    engineEffect(react, 'electricityInfo.electricityAvailability', setElectricityDemand)
-    
-    const [waterDemand, setWaterDemand] = react.useState(-1)
-    engineEffect(react, 'waterInfo.waterAvailability', setWaterDemand)
-    
-    const [sewageDemand, setSewageDemand] = react.useState(-1)
-    engineEffect(react, 'waterInfo.sewageAvailability', setSewageDemand)
 
-    const [fireHazard, setFireHazard] = react.useState(-1)
-    engineEffect(react, 'fireAndRescueInfo.averageFireHazard', setFireHazard)
-
-    const [healthcareDemand, setHealthcareDemand] = react.useState(-1)
-    engineEffect(react, 'healthcareInfo.averageHealth', setHealthcareDemand)
+    const meters = eventsToListenTo.map(([label, eventName, gradient]) => {      
+        const [read, set] = react.useState(-1)
+        engineEffect(react, eventName, set)
+        return <$Meter key={eventName} label={label} value={read} gradient={gradient}/>
+    })
 
     return <div>
         <$Panel title="City Monitor" react={react}>
-            <$Meter label="Electricity" value={electricityDemand} gradient="linear-gradient(to right,rgba(255, 78, 24, 1.000000) 0.000000%, rgba(255, 78, 24, 1.000000) 40.000000%, rgba(255, 131, 27, 1.000000) 40.000000%, rgba(255, 131, 27, 1.000000) 50.000000%, rgba(99, 181, 6, 1.000000) 50.000000%, rgba(99, 181, 6, 1.000000) 60.000000%, rgba(71, 148, 54, 1.000000) 60.000000%, rgba(71, 148, 54, 1.000000) 100.000000%)"/>
-            <$Meter label="Water" value={waterDemand} gradient="linear-gradient(to right,rgba(255, 78, 24, 1.000000) 0.000000%, rgba(255, 78, 24, 1.000000) 40.000000%, rgba(255, 131, 27, 1.000000) 40.000000%, rgba(255, 131, 27, 1.000000) 50.000000%, rgba(99, 181, 6, 1.000000) 50.000000%, rgba(99, 181, 6, 1.000000) 60.000000%, rgba(71, 148, 54, 1.000000) 60.000000%, rgba(71, 148, 54, 1.000000) 100.000000%)"/>
-            <$Meter label="Sewage" value={sewageDemand} gradient="linear-gradient(to right,rgba(255, 78, 24, 1.000000) 0.000000%, rgba(255, 78, 24, 1.000000) 40.000000%, rgba(255, 131, 27, 1.000000) 40.000000%, rgba(255, 131, 27, 1.000000) 50.000000%, rgba(99, 181, 6, 1.000000) 50.000000%, rgba(99, 181, 6, 1.000000) 60.000000%, rgba(71, 148, 54, 1.000000) 60.000000%, rgba(71, 148, 54, 1.000000) 100.000000%)"/>
-            <$Meter label="Healthcare" value={healthcareDemand} gradient="linear-gradient(to right,rgba(255, 78, 24, 1.000000) 0.000000%, rgba(255, 78, 24, 1.000000) 40.000000%, rgba(255, 131, 27, 1.000000) 40.000000%, rgba(255, 131, 27, 1.000000) 50.000000%, rgba(99, 181, 6, 1.000000) 50.000000%, rgba(99, 181, 6, 1.000000) 60.000000%, rgba(71, 148, 54, 1.000000) 60.000000%, rgba(71, 148, 54, 1.000000) 100.000000%)"/>
-            <$Meter label="Fire Hazard" value={fireHazard} gradient="linear-gradient(to right,rgba(71, 148, 54, 1.000000) 0.000000%, rgba(99, 181, 6, 1.000000) 66.000000%, rgba(255, 131, 27, 1.000000) 33.000000%, rgba(255, 78, 24, 1.000000) 100.000000%)"/>
+            {...meters}
         </$Panel>
     </div>
 }
