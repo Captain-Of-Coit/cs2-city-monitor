@@ -6,22 +6,23 @@ https://github.com/Captain-Of-Coit/cs2-city-monitor/assets/126259864/c75e0b7f-ac
 
 Should display the following stats:
 
-- Electricity availability
-- Water availability
-- Sewage treatment
-- Landfill usage
-- Incineration status
-- Healthcare availability
-- Average health
-- Cemetery usage
-- Crematorium availability
-- Fire hazard
-- Crime rate
-- Jail availability
-- Elementary school availability
-- High school availability
-- University availability
-- Employment rate
+- Electricity availability (`electricityInfo.electricityAvailability`)
+- Water availability (`waterInfo.waterAvailability`)
+- Sewage treatment (`waterInfo.sewageAvailability`)
+- Landfill usage (`garbageInfo.landfillAvailability`)
+- Incineration status TODO
+- Healthcare availability (`healthcareInfo.healthcareAvailability`)
+- Average health (`healthcareInfo.averageHealth`)
+- Cemetery usage (`healthcareInfo.cemeteryAvailability`)
+- Crematorium availability TODO
+- Fire hazard (`fireAndRescueInfo.averageFireHazard`)
+- Crime rate (`policeInfo.averageCrimeProbability`)
+- Jail availability (`policeInfo.jailAvailability`)
+- Elementary school availability (`educationInfo.elementaryAvailability`)
+- High school availability (`educationInfo.highSchoolAvailability`)
+- College availability (`educationInfo.collegeAvailability`)
+- University availability (`educationInfo.universityAvailability`)
+- Employment rate TODO
 
 ## Requirements
 
