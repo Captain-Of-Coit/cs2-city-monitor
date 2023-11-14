@@ -29,11 +29,11 @@ const $Meter = ({label, value, gradient}) => {
 
 const panelStyle = {
     position: 'absolute',
-    width: 300,
+    width: '300rem',
 }
 
 const $Panel = ({ title, children, react }) => {
-    const [position, setPosition] = react.useState({ top: 100, right: 10 });
+    const [position, setPosition] = react.useState({ top: 100, left: 10 });
     const [dragging, setDragging] = react.useState(false);
     const [rel, setRel] = react.useState({ x: 0, y: 0 }); // Position relative to the cursor
 
@@ -65,7 +65,7 @@ const $Panel = ({ title, children, react }) => {
 
         setPosition({
             top: e.clientY - rel.y,
-            right: window.innerWidth - e.clientX - (panelStyle.width - rel.x),
+            left: e.clientX - rel.x,
         });
         e.stopPropagation();
         e.preventDefault();
@@ -74,7 +74,7 @@ const $Panel = ({ title, children, react }) => {
     const draggableStyle = {
         ...panelStyle,
         top: position.top + 'px',
-        right: position.right + 'px',
+        left: position.left + 'px',
     }
 
     react.useEffect(() => {
