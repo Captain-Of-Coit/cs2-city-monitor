@@ -11,7 +11,7 @@ containsNsfwContent = false
 
 [package.dependencies]
 BepInEx-BepInExPack = "5.4.2100"
-CaptainOfCoit-HookUI = "0.3.1"
+CaptainOfCoit-HookUI = "0.3.2"
 
 [build]
 icon = "./icon.png"
