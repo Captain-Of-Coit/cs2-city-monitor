@@ -89,12 +89,13 @@ namespace CityMonitor.Systems {
                 foreach (KeyValuePair<K, V> item in value) {
                     m_KeyWriter.Write(writer, item.Key);
 
-                    // If V is Dictionary = 
+                    // If V is a directory, recursively call Write
                     if (item.Value is IDictionary<K, V> nestedDictionary) {
                         Write(writer, nestedDictionary);
+                    } else {
+                        m_ValueWriter.Write(writer, item.Value);
                     }
                 }
-
                 writer.MapEnd();
                 return;
             }
