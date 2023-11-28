@@ -1,2 +1,6 @@
 dist/
+bin/
+obj/
+ts-build/
 node_modules/
+.vs/

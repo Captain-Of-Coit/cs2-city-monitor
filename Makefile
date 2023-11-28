@@ -1,17 +1,28 @@
 all: build
+BEPINEX_VERSION = 6
 
-install-ui-deps:
-	@npm ci
+clean:
+	@rm -r dist/
+	@dotnet clean
 
-bundle: install-ui-deps
-	@node build.mjs
+restore:
+	@dotnet restore
 
-build: bundle
-	@echo Build complete.
+build-ui:
+	@npm install
+	@npx esbuild ui_src/city_monitor.jsx --bundle --outfile=dist/bundle.js
 
-package-pwsh: build
-	@powershell -Command "$$version = (Get-Content package.json | ConvertFrom-Json).version; Compress-Archive -Path './dist/city_monitor.transpiled.js' -DestinationPath \"./dist/release-$$version.zip\""
+build: clean restore build-ui
+	@dotnet build /p:BepInExVersion=$(BEPINEX_VERSION)
+
+package-win: build
+	@-mkdir dist
+	@cmd /c copy /y "bin\Debug\netstandard2.1\0Harmony.dll" "dist\"
+	@cmd /c copy /y "bin\Debug\netstandard2.1\CityMonitor.dll" "dist\"
+	@echo Packaged to dist/
 
 package-unix: build
-	@version=$$(jq -r '.version' package.json); \
-	zip ./dist/release-$$version.zip ./dist/city_monitor.transpiled.js
+	@-mkdir dist
+	@cp bin/Debug/netstandard2.1/0Harmony.dll dist
+	@cp bin/Debug/netstandard2.1/CityMonitor.dll dist
+	@echo Packaged to dist/

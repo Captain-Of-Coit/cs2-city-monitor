@@ -1,22 +1,57 @@
-name: Release
+name: mycoolmod-ci
 
 on:
   push:
     branches: [ "master" ]
+    tags: [ "v*" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        bepinex-version: [5, 6]
     steps:
-    - uses: actions/checkout@v4
-    - name: Build project
-      uses: actions/setup-node@v3
-      with:
-        node-version: '21.1.0'
-    - run: make build
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: release-${{ github.sha }}
-        path: dist/*.transpiled.js
+      - name: Checkout source
+        uses: actions/checkout@v3
+      - name: Checkout libcs2
+        uses: actions/checkout@v3
+        with:
+          repository: Captain-Of-Coit/libcs2
+          token: ${{ secrets.GH_PAT }}
+          path: libcs2/
+      - name: Install .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.0.x
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: '21.1.0'
+      - name: Build (BepInEx ${{ matrix.bepinex-version }})
+        run: make package-unix BEPINEX_VERSION=${{ matrix.bepinex-version }}
+      - name: Upload Artifact (BepInEx ${{ matrix.bepinex-version }})
+        uses: actions/upload-artifact@v3
+        with:
+          name: built-code-${{ matrix.bepinex-version }}
+          path: dist/*.dll
+  publish:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+      - name: Download built artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: built-code-5
+          path: dist/
+      - name: Debug
+        run: ls && ls dist/
+      - name: Download tcli
+        run: |
+          curl -L https://github.com/thunderstore-io/thunderstore-cli/releases/download/0.2.1/tcli-0.2.1-linux-x64.tar.gz -o tcli.tar.gz
+          tar -xzf tcli.tar.gz
+      - name: Publish with tcli
+        run: ./tcli-0.2.1-linux-x64/tcli publish --token=${{ secrets.TS_TOKEN }}
