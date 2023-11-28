@@ -2,7 +2,6 @@ all: build
 BEPINEX_VERSION = 6
 
 clean:
-	@rm -r dist/
 	@dotnet clean
 
 restore:
@@ -22,6 +21,7 @@ package-win: build
 	@echo Packaged to dist/
 
 package-unix: build
+	@-rm -r dist/
 	@-mkdir dist
 	@cp bin/Debug/netstandard2.1/0Harmony.dll dist
 	@cp bin/Debug/netstandard2.1/CityMonitor.dll dist
