@@ -20,6 +20,7 @@ build: clean restore build-ui
 package-win: build
 	@-mkdir dist
 	@cmd /c copy /y "bin\Debug\netstandard2.1\0Harmony.dll" "dist\"
+	@cmd /c copy /y "bin\Debug\netstandard2.1\System.Collections.Immutable.dll" "dist\"
 	@cmd /c copy /y "bin\Debug\netstandard2.1\CityMonitor.dll" "dist\"
 	@echo Packaged to dist/
 
@@ -27,6 +28,7 @@ package-unix: build
 	@-rm -r dist/
 	@-mkdir dist
 	@cp bin/Debug/netstandard2.1/0Harmony.dll dist
+	@cp bin/Debug/netstandard2.1/System.Collections.Immutable.dll dist
 	@cp bin/Debug/netstandard2.1/CityMonitor.dll dist
 	@echo Packaged to dist/
 
