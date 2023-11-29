@@ -76,7 +76,7 @@ namespace CityMonitor.Systems {
                 eventName = eventName,
                 index = index,
                 gradientName = gradient,
-                isEnabled = false,
+                isEnabled = true,
             });
         }
 
