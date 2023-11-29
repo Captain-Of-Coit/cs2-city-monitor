@@ -1,6 +1,6 @@
 {
   "name": "city-monitor",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Displays a little window so you can see the most important details of your city without having to open up any panels manually.",
   "main": "build.mjs",
   "scripts": {

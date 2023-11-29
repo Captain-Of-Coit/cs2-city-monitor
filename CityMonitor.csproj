@@ -12,7 +12,7 @@
 		<AssemblyName>CityMonitor</AssemblyName>
 		<RootNamespace>CityMonitor</RootNamespace>
 		<Description>A little panel with the most important metrics of your city without having to browse around</Description>
-		<Version>0.2.0</Version>
+		<Version>0.3.0</Version>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<LangVersion>latest</LangVersion>
 		<RestoreAdditionalProjectSources>

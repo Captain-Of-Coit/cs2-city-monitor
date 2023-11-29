@@ -4,7 +4,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "CaptainOfCoit"
 name = "CityMonitor"
-versionNumber = "0.2.0"
+versionNumber = "0.3.0"
 description = "A little panel with the most important metrics of your city without having to browse around"
 websiteUrl = "https://thunderstore.io"
 containsNsfwContent = false
