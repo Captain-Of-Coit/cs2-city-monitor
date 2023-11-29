@@ -3,10 +3,11 @@ using Colossal.UI.Binding;
 using System.Collections.Generic;
 using Colossal.Annotations;
 using System;
+using System.Collections.Immutable;
 
 namespace CityMonitor.Systems {
 
-    class MeterSetting : IJsonWritable {
+    public record MeterSetting : IJsonWritable {
         public string label;
         public string eventName;
         public int index;
@@ -21,53 +22,70 @@ namespace CityMonitor.Systems {
 
             writer.PropertyName("eventName");
             writer.Write(this.eventName);
-            
+
             writer.PropertyName("index");
             writer.Write(this.index);
-            
+
             writer.PropertyName("gradientName");
             writer.Write(this.gradientName);
-            
+
             writer.PropertyName("isEnabled");
             writer.Write(this.isEnabled);
-            
+
             writer.TypeEnd();
         }
     }
 
     class CityMonitorUISystem : UISystemBase {
-        private Dictionary<string, MeterSetting> meters = new Dictionary<string, MeterSetting>();
+        private ImmutableDictionary<string, MeterSetting> meters;
 
         private string kGroup = "city_monitor";
         protected override void OnCreate() {
             base.OnCreate();
 
-            meters.Add("electricity", new MeterSetting {
-                label = "Electricity Availability",
-                eventName = "electricityInfo.electricityAvailability",
-                index = 0,
-                gradientName = "maxGood",
-                isEnabled = true,
-            });
+            var builder = ImmutableDictionary.CreateBuilder<string, MeterSetting>();
 
-            this.AddUpdateBinding(new GetterValueBinding<Dictionary<string, MeterSetting>>(this.kGroup, "meters", () => {
+            AddMeter(builder, 0, "electricity", "Electricity Availability", "electricityInfo.electricityAvailability", "maxGood");
+            AddMeter(builder, 1, "water", "Water Availability", "waterInfo.waterAvailability", "maxGood");
+            AddMeter(builder, 2, "sewage", "Sewage", "waterInfo.sewageAvailability", "maxGood");
+            AddMeter(builder, 3, "landfill", "Landfill Usage", "garbageInfo.landfillAvailability", "maxGood");
+            AddMeter(builder, 4, "healthcare", "Healthcare Availability", "healthcareInfo.healthcareAvailability", "maxGood");
+            AddMeter(builder, 5, "health", "Average Health", "healthcareInfo.averageHealth", "maxGood");
+            AddMeter(builder, 6, "cemetery", "Cemetery Availability", "healthcareInfo.cemeteryAvailability", "maxGood");
+            AddMeter(builder, 7, "fire_hazard", "Fire Hazard", "fireAndRescueInfo.averageFireHazard", "minGood");
+            AddMeter(builder, 8, "crime", "Crime Rate", "policeInfo.averageCrimeProbability", "minGood");
+            AddMeter(builder, 9, "jail", "Jail Availability", "policeInfo.jailAvailability", "maxGood");
+            AddMeter(builder, 10, "elementary", "Elementary School Availability", "educationInfo.elementaryAvailability", "maxGood");
+            AddMeter(builder, 11, "highschool", "High School Availability", "educationInfo.highSchoolAvailability", "maxGood");
+            AddMeter(builder, 12, "collage", "College Availability", "educationInfo.collegeAvailability", "maxGood");
+            AddMeter(builder, 13, "university", "University Availability", "educationInfo.universityAvailability", "maxGood");
+
+            meters = builder.ToImmutableDictionary();
+
+            this.AddUpdateBinding(new GetterValueBinding<ImmutableDictionary<string, MeterSetting>>(kGroup, "meters", () => {
                 return meters;
             }, new MyDictionaryWriter<string, MeterSetting>()));
 
 
-            //this.AddUpdateBinding(new GetterValueBinding<Dictionary<string, MeterSetting>>(this.kGroup, "meters", () => {
-            //    return meters;
-            //}));
+            this.AddBinding(new TriggerBinding<string, bool>(kGroup, "toggle_visibility", new Action<string, bool>(ToggleVisibility)));
+        }
 
-            //this.AddUpdateBinding(
-            //    (IUpdateBinding)new GetterValueBinding<AppBindings.FrameTiming>(
-            //        "app",
-            //        "frameStats",
-            //        (Func<AppBindings.FrameTiming>)(() => AppBindings.m_FrameTiming),
-            //        (IWriter<AppBindings.FrameTiming>)new ValueWriter<AppBindings.FrameTiming>())
-            //   );
+        private void AddMeter(ImmutableDictionary<string, MeterSetting>.Builder builder, int index, string key, string label, string eventName, string gradient) {
+            builder.Add(key, new MeterSetting {
+                label = label,
+                eventName = eventName,
+                index = index,
+                gradientName = gradient,
+                isEnabled = false,
+            });
+        }
 
-            UnityEngine.Debug.Log("onCreate CityMonitor done");
+        private void ToggleVisibility(string key, bool newValue) {
+            var oldMeter = meters[key];
+            oldMeter.isEnabled = newValue;
+
+            var newMeters = meters.Remove(key).Add(key, oldMeter);
+            this.meters = newMeters;
         }
     }
 
@@ -89,10 +107,10 @@ namespace CityMonitor.Systems {
                 foreach (KeyValuePair<K, V> item in value) {
                     m_KeyWriter.Write(writer, item.Key);
 
-                    // If V is a directory, recursively call Write
                     if (item.Value is IDictionary<K, V> nestedDictionary) {
                         Write(writer, nestedDictionary);
-                    } else {
+                    }
+                    else {
                         m_ValueWriter.Write(writer, item.Value);
                     }
                 }
@@ -104,5 +122,4 @@ namespace CityMonitor.Systems {
             throw new ArgumentNullException("value", "Null passed to non-nullable dictionary writer");
         }
     }
-
 }

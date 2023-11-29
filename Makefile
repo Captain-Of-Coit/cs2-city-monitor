@@ -1,5 +1,5 @@
 all: build
-BEPINEX_VERSION = 6
+BEPINEX_VERSION = 5
 
 clean:
 	@dotnet clean
@@ -29,3 +29,6 @@ package-unix: build
 	@cp bin/Debug/netstandard2.1/0Harmony.dll dist
 	@cp bin/Debug/netstandard2.1/CityMonitor.dll dist
 	@echo Packaged to dist/
+
+package-dev: package-unix
+	@cp -r dist\CityMonitor.dll G:\Thunderstore\CitiesSkylines2\profiles\HookUI\BepInEx\plugins\CityMonitor\CityMonitor.dll
