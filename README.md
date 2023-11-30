@@ -4,7 +4,7 @@ This mod displays the most important details of your city in an overlay so you c
 
 https://github.com/Captain-Of-Coit/cs2-city-monitor/assets/126259864/c75e0b7f-ac10-4086-af54-44e9b19e5fdf
 
-**Important**: Mods are not yet currently officially supported in Cities: Skylines 2. Use this mod at your own risk.
+**Important**: Mods are not yet officially supported in Cities: Skylines 2. Use this mod at your own risk.
 
 ## Available stats
 
